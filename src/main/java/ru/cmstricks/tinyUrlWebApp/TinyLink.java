@@ -1,4 +1,4 @@
-package ru.cmstricks.tinyUrlWebApp.accessingdatamysql;
+package ru.cmstricks.tinyUrlWebApp;
 
 import jakarta.persistence.*;
 
