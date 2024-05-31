@@ -1,0 +1,17 @@
+CREATE DATABASE `urlshortener` /*!40100 DEFAULT CHARACTER SET utf8mb3 */ /*!80016 DEFAULT ENCRYPTION='N' */;
+
+CREATE TABLE `urlshortener`.`tinylinks` (
+  `innerlink` VARCHAR(5) NOT NULL,
+  `outerlink` VARCHAR(2048) NULL,
+  PRIMARY KEY (`innerlink`));
+
+
+CREATE TABLE `urlshortener`.`precooked_free_links` (
+  `innerlink` VARCHAR(5) NOT NULL,
+  PRIMARY KEY (`innerlink`));
+
+
+CREATE TABLE `urlshortener`.`precooked_paid_links` (
+  `innerlink` VARCHAR(5) NOT NULL,
+  `price` DECIMAL(10,2) NOT NULL,
+  PRIMARY KEY (`innerlink`));
