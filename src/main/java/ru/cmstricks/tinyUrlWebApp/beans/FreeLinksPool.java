@@ -44,9 +44,4 @@ public class FreeLinksPool {
             logger.error("Exception while loading Free Links in Pool, there are no prelinks");
         }
     }
-
-    public synchronized void returnFreeLink(FreeLink freeLink) {
-        freeLinkArrayList.add(freeLink);
-    }
-
 }
