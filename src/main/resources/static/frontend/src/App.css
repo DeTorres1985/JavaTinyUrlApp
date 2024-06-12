@@ -1,0 +1,11 @@
+body {
+    background-color:#F3F3F3;
+}
+.mainDiv {
+}
+    .mainDiv .logo {
+        margin-bottom:30px;
+        background: url(logo.png) no-repeat;
+        width:691px;
+        height:129px;
+}

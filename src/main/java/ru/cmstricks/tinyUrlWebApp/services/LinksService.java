@@ -9,7 +9,8 @@ public interface LinksService {
     Optional<FreeLink> getFreeLinkById(String id);
     Optional<PaidLink> getPaidLinkById(String id);
     boolean isLinkPaid(String s);
-    void createFreeLink(FreeLink freeLink);
-    void createPaidLink(PaidLink paidLink);
+    void createFreeLinks(Iterable<FreeLink> links);
+    void createPaidLinks(Iterable<PaidLink> links);
+    void deleteFreeLink(FreeLink link);
     Integer createPreLinks();
 }
