@@ -1,0 +1,32 @@
+.code-block {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-top: 20px;
+    width:440px;
+    position:relative;
+    background-color:#fafaf0;
+}
+
+pre {
+    font-family: monospace;
+    white-space: pre-wrap;
+}
+
+button {
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+button.copy {
+    padding:0;
+    position: absolute;
+    right: 0px;
+    bottom: 0;
+    width: 54px;
+    height: 60px;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: default;
+}

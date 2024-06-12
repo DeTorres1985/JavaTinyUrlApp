@@ -3,7 +3,7 @@ package ru.cmstricks.tinyUrlWebApp.services.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import ru.cmstricks.tinyUrlWebApp.repositories.FreeLinkRepository;
+import ru.cmstricks.tinyUrlWebApp.repositories.FreeLinkCrudRepository;
 import ru.cmstricks.tinyUrlWebApp.repositories.PaidLinkRepository;
 import ru.cmstricks.tinyUrlWebApp.repositories.entities.FreeLink;
 import ru.cmstricks.tinyUrlWebApp.repositories.entities.PaidLink;
@@ -20,16 +20,19 @@ public class LinksServiceImpl implements LinksService {
     @Autowired
     PaidLinkRepository paidLinkRepository;
     @Autowired
-    FreeLinkRepository freeLinkRepository;
+    FreeLinkCrudRepository freeLinkCrudRepository;
 
     @Value("${link.price.default}")
     private BigDecimal defaultPrice;
+    private int batchSize = 100;
     private Integer cntr = 0;
+    private ArrayList<FreeLink> freeLinks = new ArrayList<>();
+    private ArrayList<PaidLink> paidLinks = new ArrayList<>();
 
 
     @Override
     public Optional<FreeLink> getFreeLinkById(String id) {
-        return freeLinkRepository.findById(id);
+        return freeLinkCrudRepository.findById(id);
     }
 
     @Override
@@ -62,13 +65,18 @@ public class LinksServiceImpl implements LinksService {
     }
 
     @Override
-    public void createFreeLink(FreeLink link) {
-        freeLinkRepository.save(link);
+    public void createFreeLinks(Iterable<FreeLink> links) {
+        freeLinkCrudRepository.saveAll(links);
     }
 
     @Override
-    public void createPaidLink(PaidLink link) {
-        paidLinkRepository.save(link);
+    public void createPaidLinks(Iterable<PaidLink> links) {
+        paidLinkRepository.saveAll(links);
+    }
+
+    @Override
+    public void deleteFreeLink(FreeLink link) {
+        freeLinkCrudRepository.delete(link);
     }
 
     @Override
@@ -77,29 +85,44 @@ public class LinksServiceImpl implements LinksService {
         Integer counter = 0;
         for (char c : dictionary) {
             String str = String.valueOf(c);
-            createLink(str);
+            addLinkToTempArray(str);
             counter++;
             for (char d : dictionary) {
                 String strD = str + d;
-                createLink(strD);
+                addLinkToTempArray(strD);
                 counter++;
                 for (char e : dictionary) {
-                    String strE = str + e;
-                    createLink(strE);
+                    String strE = strD + e;
+                    addLinkToTempArray(strE);
                     counter++;
+                }
+                if (freeLinks.size() > batchSize) {
+                    saveFreeLinks();
                 }
             }
         }
+        saveFreeLinks();
+        savePaidLinks();
 
         return counter;
     }
 
-    private void createLink(String str) {
+    private void saveFreeLinks() {
+        createFreeLinks(freeLinks);
+        freeLinks = new ArrayList<>();
+    }
+
+    private void savePaidLinks() {
+        createPaidLinks(paidLinks);
+        paidLinks = new ArrayList<>();
+    }
+
+    private void addLinkToTempArray(String str) {
         if (isLinkPaid(str)) {
-            createPaidLink(new PaidLink(str, defaultPrice));
+            paidLinks.add(new PaidLink(str, defaultPrice));
         } else {
-            createFreeLink(new FreeLink(str));
+            freeLinks.add(new FreeLink(str));
         }
-        System.out.println(cntr++ + " created link: " + str);
+        System.out.println(cntr++ + " added link: " + str);
     }
 }
